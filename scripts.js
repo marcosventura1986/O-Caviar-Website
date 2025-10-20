@@ -7,24 +7,21 @@ function toggleDrawer(force){
 
   d.style.display = open ? 'block' : 'none';
   if (backdrop) backdrop.style.display = open ? 'block' : 'none';
-
   if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   document.body.classList.toggle('noscroll', open);
 
   if (open) {
     const firstLink = d.querySelector('a');
     firstLink && firstLink.focus();
+  } else {
+    btn && btn.focus();
   }
 }
 
-// Fechar com ESC
 document.addEventListener('keydown', (e) => {
   const d = document.getElementById('drawer');
   if (!d) return;
-  const isOpen = d.style.display === 'block';
-  if (isOpen && e.key === 'Escape') {
-    toggleDrawer(false);
-  }
+  if (e.key === 'Escape' && d.style.display === 'block') toggleDrawer(false);
 });
 
 // Footer year
@@ -33,84 +30,155 @@ document.addEventListener('DOMContentLoaded', () => {
   if (y) y.textContent = new Date().getFullYear();
 });
 
-// Timeline progress on scroll
+// ====== TIMELINE (ajuste fino de alinhamento) ======
 (function(){
-  const timeline = document.querySelector('[data-animate-line]');
+  const tl = document.querySelector('[data-animate-line]');
   const progress = document.getElementById('timelineProgress');
-  if(!timeline || !progress) return;
+  if (!tl || !progress) return;
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        updateProgress();
-        window.addEventListener('scroll', updateProgress);
-        window.addEventListener('resize', updateProgress);
-      }
+  const items = Array.from(tl.querySelectorAll('.t-item'));
+  let centers = [];
+  let start = 0;
+  let maxH = 0;
+
+  function measure(){
+    const tRect = tl.getBoundingClientRect();
+    const tTop = tRect.top + window.scrollY;
+
+    centers = items.map(el => {
+      const r = el.getBoundingClientRect();
+      const absTop = r.top + window.scrollY;
+      return absTop - tTop + (r.height / 2);
     });
-  }, {threshold: 0.1});
-  observer.observe(timeline);
 
-  function updateProgress(){
-    const rect = timeline.getBoundingClientRect();
-    const visible = Math.min(rect.height, Math.max(0, window.innerHeight - Math.max(0, rect.top)));
-    const pct = Math.max(0, Math.min(1, visible / rect.height));
-    progress.style.height = (pct * 100) + '%';
+    if (!centers.length) return;
+    const firstCenter = centers[0];
+    const lastCenter  = centers[centers.length - 1];
+
+    start = firstCenter;               // linha começa exatamente no centro do 1º ponto
+    maxH  = lastCenter - firstCenter;  // termina no centro do último ponto
+
+    progress.style.top = `${start}px`;
   }
+
+  function update(){
+  const tRect = tl.getBoundingClientRect();
+  const tlTop = tRect.top + window.scrollY;
+  const viewportBottom = window.scrollY + window.innerHeight;
+
+  // ➜ se o usuário está acima da sessão (a parte de baixo do viewport
+  // ainda não alcançou o topo da timeline), resetamos tudo
+  if (viewportBottom < tlTop) {
+    progress.style.height = '0px';
+    items.forEach(el => el.classList.remove('is-visible'));
+    return;
+  }
+
+  const visible = viewportBottom - (tlTop + start);
+  const height = Math.max(0, Math.min(visible, maxH));
+
+  progress.style.height = `${height}px`;
+
+  centers.forEach((pos, i) => {
+    if (height >= (pos - start) - 8) items[i].classList.add('is-visible');
+  });
+}
+
+  const ro = new ResizeObserver(() => { measure(); update(); });
+  ro.observe(tl);
+  ['scroll','resize'].forEach(evt => window.addEventListener(evt, update, { passive:true }));
+  window.addEventListener('load', () => { measure(); update(); });
 })();
 
-// Sensory radar
-(function(){
+// === Sensory Radar (auto-contido) ============================================
+(() => {
   const svg = document.getElementById('radarChart');
-  if(!svg) return;
+  if (!svg) return;
 
-  const size = 220, cx = 110, cy = 110, levels = 4, max = 10;
-  const labels = ['Silk', 'Butter', 'Mineral', 'Aroma', 'Finish'];
-  const values = [9, 8, 7, 7, 8];
+  // Dados (0–1) nas 3 dimensões mostradas na lista: Texture, Taste, Aroma.
+  // Ajuste se quiser calibrar o desenho, mas pode usar esses valores padrão.
+  const values = [0.85, 0.78, 0.65]; // [Texture, Taste, Aroma]
 
-  for(let l=1; l<=levels; l++){
-    const r = (l/levels) * 90;
-    const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
-    let points = '';
-    for(let i=0;i<labels.length;i++){
-      const angle = (Math.PI*2/labels.length)*i - Math.PI/2;
-      const x = cx + Math.cos(angle)*r;
-      const y = cy + Math.sin(angle)*r;
-      points += `${x},${y} `;
+  const size = 220;
+  const cx = size / 2, cy = size / 2;
+  const radius = 90;           // raio útil
+  const levels = 4;            // linhas de grade
+  const strokeGrid = '#cfc8b7'; // --muted
+  const strokePoly = '#c8a96a'; // --gold
+
+  // util
+  const toPolar = (val, angleRad) => {
+    const r = val * radius;
+    return [cx + r * Math.cos(angleRad), cy + r * Math.sin(angleRad)];
+  };
+
+  // limpa antes de desenhar (idempotente)
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+  // container (opcional, ajuda se quiser estilos futuros)
+  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.setAttribute('transform', `translate(0,0)`);
+  svg.appendChild(g);
+
+  // grade (polígonos concêntricos)
+  for (let l = 1; l <= levels; l++) {
+    const frac = l / levels;
+    const pts = [];
+    for (let i = 0; i < values.length; i++) {
+      const angle = -Math.PI / 2 + (2 * Math.PI * i) / values.length;
+      const [x, y] = toPolar(frac, angle);
+      pts.push(`${x},${y}`);
     }
-    poly.setAttribute('points', points.trim());
-    poly.setAttribute('fill','none');
-    poly.setAttribute('stroke','rgba(200,169,106,0.25)');
-    poly.setAttribute('stroke-width','1');
-    svg.appendChild(poly);
+    const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    poly.setAttribute('points', pts.join(' '));
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', strokeGrid);
+    poly.setAttribute('stroke-opacity', '0.25');
+    poly.setAttribute('stroke-width', '1');
+    g.appendChild(poly);
   }
 
-  for(let i=0;i<labels.length;i++){
-    const angle = (Math.PI*2/labels.length)*i - Math.PI/2;
-    const x = cx + Math.cos(angle)*100;
-    const y = cy + Math.sin(angle)*100;
-    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
-    text.setAttribute('x', x);
-    text.setAttribute('y', y);
-    text.setAttribute('dominant-baseline','middle');
-    text.setAttribute('text-anchor', x < cx ? 'end' : 'start');
-    text.setAttribute('font-size','10');
-    text.setAttribute('fill','rgba(236,233,224,0.8)');
-    text.textContent = labels[i];
-    svg.appendChild(text);
+  // eixos
+  for (let i = 0; i < values.length; i++) {
+    const angle = -Math.PI / 2 + (2 * Math.PI * i) / values.length;
+    const [x, y] = toPolar(1, angle);
+    const axis = document.createElementNS('http://www.w3.org/2000/svg','line');
+    axis.setAttribute('x1', cx); axis.setAttribute('y1', cy);
+    axis.setAttribute('x2', x);  axis.setAttribute('y2', y);
+    axis.setAttribute('stroke', strokeGrid);
+    axis.setAttribute('stroke-opacity', '0.35');
+    axis.setAttribute('stroke-width', '1');
+    g.appendChild(axis);
   }
 
-  const dataPoly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
-  let dpoints = '';
-  for(let i=0;i<labels.length;i++){
-    const angle = (Math.PI*2/labels.length)*i - Math.PI/2;
-    const r = (values[i]/max) * 90;
-    const x = cx + Math.cos(angle)*r;
-    const y = cy + Math.sin(angle)*r;
-    dpoints += `${x},${y} `;
+  // polígono de valores
+  const valPts = [];
+  for (let i = 0; i < values.length; i++) {
+    const angle = -Math.PI / 2 + (2 * Math.PI * i) / values.length;
+    const [x, y] = toPolar(values[i], angle);
+    valPts.push(`${x},${y}`);
   }
-  dataPoly.setAttribute('points', dpoints.trim());
-  dataPoly.setAttribute('fill','rgba(200,169,106,0.25)');
-  dataPoly.setAttribute('stroke','rgba(185,122,60,0.9)');
-  dataPoly.setAttribute('stroke-width','2');
-  svg.appendChild(dataPoly);
+  const polyVal = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  polyVal.setAttribute('points', valPts.join(' '));
+  polyVal.setAttribute('fill', 'none');
+  polyVal.setAttribute('stroke', strokePoly);
+  polyVal.setAttribute('stroke-width', '2');
+  polyVal.setAttribute('stroke-linejoin', 'round');
+  g.appendChild(polyVal);
+
+  // pontinhos nos vértices
+  valPts.forEach(pt => {
+    const [x, y] = pt.split(',').map(parseFloat);
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', '2.5');
+    c.setAttribute('fill', strokePoly);
+    g.appendChild(c);
+  });
+
+  // acessibilidade
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', 'Sensory radar chart');
+
+  // responsivo: o SVG já tem viewBox; não precisa redimensionar nada
 })();
+

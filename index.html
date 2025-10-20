@@ -100,7 +100,7 @@
     </section>
 
     <!-- ========= Collection ========= -->
-    <section id="collection" class="section">
+    <section id="collection" class="section collection">
       <div class="container">
         <header class="section-head">
           <h2>Our Selection</h2>
@@ -108,15 +108,15 @@
         </header>
         <div class="grid-3 product-grid">
           <article class="card product">
-            <div class="ph">Beluga — image placeholder</div>
+            <div class="ph"><img src="images/product.jpg"></div>
             <div class="body">
               <h3>Beluga</h3>
-              <p class="muted">Large pearl, buttery glide, lingering finish. Origin and maturation notes to follow.</p>
+              <p class="muted">Large pearl, buttery glide, lingering finish.</p>
               <a href="#shop" class="btn ghost">View details</a>
             </div>
           </article>
           <article class="card product">
-            <div class="ph">Oscietra — image placeholder</div>
+            <div class="ph"><img src="images/product.jpg"></div>
             <div class="body">
               <h3>Oscietra</h3>
               <p class="muted">Firm texture, nutty elegance, poised minerality.</p>
@@ -124,7 +124,7 @@
             </div>
           </article>
           <article class="card product">
-            <div class="ph">Sevruga — image placeholder</div>
+            <div class="ph"><img src="images/product.jpg"></div>
             <div class="body">
               <h3>Sevruga</h3>
               <p class="muted">Smaller pearl, pronounced character, crystalline salinity.</p>
@@ -148,7 +148,7 @@
           <div class="timeline-line"><span class="progress" id="timelineProgress"></span></div>
 
           <div class="t-item">
-            <div class="t-media ph">Close-up — sturgeon</div>
+            <div class="t-media ph"><img src="images/sturgeon.jpg"></div>
             <div class="t-body">
               <h3>Selection</h3>
               <p>Sturgeon raised with care, respecting heritage and purity.</p>
@@ -156,7 +156,7 @@
           </div>
 
           <div class="t-item">
-            <div class="t-media ph">Hands — delicacy</div>
+            <div class="t-media ph"><img src="images/harvesting.jpg"></div>
             <div class="t-body">
               <h3>Harvest</h3>
               <p>At the precise moment, roe is harvested with utmost delicacy.</p>
@@ -164,7 +164,7 @@
           </div>
 
           <div class="t-item">
-            <div class="t-media ph">Pearls — prepared</div>
+            <div class="t-media ph"><img src="images/pearls.jpg"></div>
             <div class="t-body">
               <h3>Curation</h3>
               <p>Each pearl is gently cleaned and prepared, preserving natural integrity.</p>
@@ -172,7 +172,7 @@
           </div>
 
           <div class="t-item">
-            <div class="t-media ph">Affinage — patience</div>
+            <div class="t-media ph"><img src="images/hourglass.jpg"></div>
             <div class="t-body">
               <h3>Maturation</h3>
               <p>Aged to perfection, allowing the caviar to reach its fullest expression.</p>
@@ -180,7 +180,7 @@
           </div>
 
           <div class="t-item">
-            <div class="t-media ph">Sealed tins — finish</div>
+            <div class="t-media ph"><img src="images/plate.jpg"></div>
             <div class="t-body">
               <h3>Presentation</h3>
               <p>Sealed in tins; every batch a masterpiece of texture and taste.</p>
@@ -191,23 +191,30 @@
     </section>
 
     <!-- ========= Mission & Vision ========= -->
-    <section id="mv" class="section section-alt">
-      <div class="container">
-        <header class="section-head">
-          <h2>Our Mission & Vision</h2>
-        </header>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Mission</h3>
-            <p>To mature the world’s finest caviar to its peak expression and delight every discerning palate — ensuring every tin we produce is a masterpiece that elevates the sturgeon’s legacy.</p>
-          </div>
-          <div class="card">
-            <h3>Vision</h3>
-            <p>To position Ó Caviar as the preeminent global destination for craftsmanship, setting the new gold standard for caviar affinage.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <section id="mv" class="section mv">
+  <div class="mv-bg" aria-hidden="true"></div>
+  <div class="container">
+    <header class="section-head section-head--center">
+      <h2>Our Mission & Vision</h2>
+    </header>
+
+    <div class="mv-grid">
+      <article class="mv-card">
+        <h3>Mission</h3>
+        <p class="mv-text">
+          To mature the world’s finest caviar to its peak expression and delight every discerning palate — ensuring every tin we produce is a masterpiece that elevates the sturgeon’s legacy.
+        </p>
+      </article>
+
+      <article class="mv-card">
+        <h3>Vision</h3>
+        <p class="mv-text">
+          To position Ó Caviar as the preeminent global destination for craftsmanship, setting the new gold standard for caviar affinage.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
 
     <!-- ========= Journal ========= -->
     <section id="journal" class="section">
@@ -243,27 +250,32 @@
     </section>
 
     <!-- ========= Sensory Map & Pairings ========= -->
-    <section id="sensory" class="section section-alt">
+    <section id="sensory" class="section sensory">
+      <div class="sensory-bg" aria-hidden="true"></div>
+
       <div class="container">
-        <header class="section-head">
+        <header class="section-head section-head--center">
           <h2>The Sensory Journey</h2>
         </header>
 
-        <div class="grid-2">
-          <div class="card">
+        <div class="grid-2 sensory-grid">
+          <div class="card sensory-card">
             <h3>Sensory Profile</h3>
-            <ul class="list">
+
+            <ul class="list sensory-list">
               <li><span class="dot"></span><span><strong>Texture:</strong> Silky, delicate pearls</span></li>
               <li><span class="dot"></span><span><strong>Taste:</strong> Nutty, buttery, oceanic minerality</span></li>
               <li><span class="dot"></span><span><strong>Aroma:</strong> Subtle, fresh, refined</span></li>
             </ul>
-            <div class="radar-wrap">
+
+            <div class="radar-wrap sensory-radar">
               <svg id="radarChart" viewBox="0 0 220 220" role="img" aria-label="Sensory radar chart"></svg>
             </div>
           </div>
-          <div class="card">
+
+          <div class="card sensory-card">
             <h3>Suggested Pairings</h3>
-            <ul class="list">
+            <ul class="list sensory-list">
               <li><span class="dot"></span><span>Champagne Brut — Effervescence lifts buttery notes.</span></li>
               <li><span class="dot"></span><span>Premium Vodka — Clean, crisp balance accentuates minerality.</span></li>
               <li><span class="dot"></span><span>Chablis / Sancerre — Bright acidity enhances oceanic freshness.</span></li>
@@ -273,6 +285,7 @@
         </div>
       </div>
     </section>
+
 
     <!-- ========= CTA / Shop ========= -->
     <section id="shop" class="section cta-section">
