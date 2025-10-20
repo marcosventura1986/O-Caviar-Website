@@ -517,3 +517,41 @@ h4 {
   .timeline-line .progress{ transition:none!important; }
 }
 
+
+@media (max-width: 720px){
+
+  /* 1) Footer em 1 coluna no mobile */
+  .footgrid{
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  /* 2) Permitir que as colunas encolham sem "estourar" a largura */
+  .footgrid > *{
+    min-width: 0;             /* crucial p/ evitar overflow de conteúdo */
+  }
+
+  /* 3) SVG logo nunca deve ultrapassar a largura do container */
+  .logo{ 
+    max-width: 100%;          /* impede que o SVG force largura extra */
+  }
+  .site-footer .logo--stacked{
+    height: 140px;            /* um pouco menor no mobile, mantém proporção */
+    width: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* 4) Quebra elegante de URLs/emails se necessário */
+  .site-footer a,
+  .site-footer .copy,
+  .site-footer .muted{
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* 5) Segurança extra contra qualquer pixel fantasma lateral */
+  .site-footer{
+    overflow-x: clip;         /* só o footer, não o site inteiro */
+  }
+}
