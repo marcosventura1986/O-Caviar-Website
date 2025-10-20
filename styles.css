@@ -520,6 +520,75 @@ h4 {
 
 @media (max-width: 720px){
 
+   /* 1) Itens em coluna única e texto centralizado */
+  .t-item{
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding-left: 0;          /* remove recuo que empurrava tudo à esquerda */
+    text-align: center;
+    align-items: start;
+  }
+
+  /* 2) Imagem sempre acima do texto */
+  .t-item .t-media{
+    order: -1;                /* imagem antes do .t-body */
+    justify-self: center;
+    position: relative;
+    z-index: 1;               /* atrás da linha */
+  }
+  .t-item .t-media img{
+    display: block;
+    max-width: min(420px, 86vw);
+    height: auto;
+  }
+
+  /* 3) Texto centralizado e acima da linha */
+  .t-item .t-body{
+    justify-self: center;
+    position: relative;
+    z-index: 3;               /* acima da linha */
+  }
+
+  /* 4) Linha centralizada e com leve transparência no mobile */
+  .timeline-line{
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -3;               /* acima da imagem, abaixo do texto */
+  }
+  .timeline-line .progress{
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: .65;             /* um pouco mais suave no mobile */
+    box-shadow: 0 0 14px rgba(200,169,106,.16);
+  }
+
+  /* 5) “Ponto” de cada item centralizado também */
+  .t-item::before{
+    left: 50%;
+    transform: translate(-50%, 12px) scale(.7);
+  }
+  .t-item.is-visible::before{
+    transform: translate(-50%, 0) scale(1);
+  }
+
+  /* 6) Truque de leitura: suaviza visualmente a linha atrás do texto
+        (parece que a linha fica mais transparente sob o texto) */
+  .t-item .t-body{
+    justify-self: center;
+    position: relative;
+    z-index: 3;
+    padding: 1.2rem 1rem;
+    border-radius: var(--radius, 12px);
+
+    /* 💡 fundo sólido ou gradiente (sem transparência) */
+    background: linear-gradient(
+      180deg,
+      #0b0f0d 0%,
+      #141a17 100%
+    );
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+
   /* 1) Footer em 1 coluna no mobile */
   .footgrid{
     grid-template-columns: 1fr;
