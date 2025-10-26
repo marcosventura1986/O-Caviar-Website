@@ -256,9 +256,29 @@ document.addEventListener('DOMContentLoaded', () => {
       g.appendChild(c);
     });
 
-    // a11y
-    svg.setAttribute('role','img');
-    svg.setAttribute('aria-label','Sensory radar chart');
+     // labels for each axis
+  const labels = ["Texture", "Taste", "Aroma"];
+  for (let i = 0; i < labels.length; i++) {
+    const angle = -Math.PI / 2 + (2 * Math.PI * i) / values.length;
+    const labelRadius = radius + 18; // distance from center
+    const x = cx + labelRadius * Math.cos(angle);
+    const y = cy + labelRadius * Math.sin(angle) + 4; // +4 for optical centering
+
+    const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    txt.textContent = labels[i];
+    txt.setAttribute('x', x);
+    txt.setAttribute('y', y);
+    txt.setAttribute('fill', '#bdb7a6');   // muted beige tone
+    txt.setAttribute('font-family', 'Poppins, sans-serif');
+    txt.setAttribute('font-size', '7');
+    txt.setAttribute('text-anchor', 'middle');
+    g.appendChild(txt);
+  }
+
+  // accessibility attributes
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', 'Sensory radar chart');
+
   }
 
   // Aplica um perfil completo (texto + pairings + radar)
@@ -349,5 +369,5 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', setCSSVar);
 })();
 
-  
+
 })();
