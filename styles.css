@@ -417,7 +417,6 @@ h4 {
 
 /* === Species Tabs (below header) === */
 .species-tabs{
-  position: sticky;
   top: 68px; /* fica logo abaixo do header fixo */
   z-index: 90;
   border-bottom: 1px solid rgba(200,169,106,.14);
