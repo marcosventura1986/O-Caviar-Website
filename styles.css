@@ -32,6 +32,10 @@
 
 /* --- RESET & BODY --- */
 *{box-sizing:border-box}
+
+/* Smooth scrolling baseline */
+html { scroll-behavior: smooth; }
+
 html,body{height:100%}
 body{
   margin:0;
@@ -77,12 +81,15 @@ h4 {
 
 /* --- HEADER --- */
 .site-header{
-  position:sticky; top:0; z-index:100;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;                         /* acima de tudo */
   backdrop-filter:saturate(160%) blur(8px);
   background:linear-gradient(180deg, rgba(11,15,13,.85), rgba(11,15,13,.55) 60%, rgba(11,15,13,0));
   border-bottom:1px solid rgba(200,169,106,.14);
 }
-.nav{display:flex; align-items:center; justify-content:space-between; padding:14px 0}
+
+.nav{ display:flex; align-items:center; justify-content:space-between; padding:14px 0}
 
 /* ===== Logo via sprite (ajustado) ===== */
 .brand {
@@ -126,9 +133,9 @@ h4 {
 /* hover opcional no header (toque premium) */
 .site-header .brand:hover { color: #d6b87a; transition: color .25s ease; }
 
-.menu{display:flex; gap:20px; align-items:center}
+.menu{position: sticky; display:flex; gap:20px; align-items:center}
 .menu a{opacity:.9; font-family: 'Poppins', sans-serif;}
-.menu a:hover{opacity:1}
+.menu a:hover{color: var(--gold);}
 .hamburger{display:none; padding:8px 12px; border:1px solid rgba(200,169,106,.35); border-radius:999px; background:transparent; color:var(--ink)}
 
 /* --- HERO --- */

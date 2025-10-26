@@ -295,4 +295,59 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
+
+// === Smooth scroll to anchors with sticky-header offset ======================
+(function(){
+  function getStickyOffset(){
+    const header = document.querySelector('.site-header');
+    const tabs   = document.querySelector('.species-tabs');
+    const h = (header?.offsetHeight || 0) + (tabs?.offsetHeight || 0);
+    // small breathing room
+    return h + 12;
+  }
+
+  function setCSSVar(){
+  const header = document.querySelector('.site-header');
+  const tabs   = document.querySelector('.species-tabs');
+  const headerH = (header?.offsetHeight || 0);
+  const off = headerH + (tabs?.offsetHeight || 0) + 12; // 12px de respiro
+
+  // expõe variáveis para CSS
+  document.documentElement.style.setProperty('--header-h', headerH + 'px');
+  document.documentElement.style.setProperty('--sticky-offset', off + 'px');
+}
+
+  function scrollWithOffset(target){
+    const el = (typeof target === 'string') ? document.querySelector(target) : target;
+    if (!el) return;
+    const off = getStickyOffset();
+    const top = el.getBoundingClientRect().top + window.scrollY - off;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  // Intercept in-page anchors (e.g., #sensory, #about)
+  function bindAnchorLinks(){
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const href = a.getAttribute('href');
+        // ignore empty or just '#'
+        if (!href || href === '#') return;
+        const target = document.querySelector(href);
+        if (target){
+          e.preventDefault();
+          scrollWithOffset(target);
+        }
+      });
+    });
+  }
+
+  // Init
+  window.addEventListener('load', () => {
+    setCSSVar();
+    bindAnchorLinks();
+  });
+  window.addEventListener('resize', setCSSVar);
+})();
+
+  
 })();
