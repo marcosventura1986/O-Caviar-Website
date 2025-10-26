@@ -286,14 +286,28 @@
           <h2>The Sensory Journey</h2>
         </header>
 
+        <!-- ===== Species Tabs (profile switcher) ===== -->
+        <nav class="species-tabs" aria-label="Caviar profiles">
+          <div class="container tabs-row">
+            <button class="btn tab is-active" data-species="Oscietra">Oscietra</button>
+            <button class="btn tab" data-species="Schrenkii">Schrenkii</button>
+            <button class="btn tab" data-species="Beluga">Beluga</button>
+            <button class="btn tab" data-species="Kaluga">Kaluga</button>
+            <button class="btn tab" data-species="Sevruga">Sevruga</button>
+            <button class="btn tab" data-species="Baerii">Baerii</button>
+            <button class="btn tab" data-species="Hybrid(s)">Hybrid(s)</button>
+            <button class="btn tab" data-species="Almas">Almas</button>
+          </div>
+        </nav>
+
         <div class="grid-2 sensory-grid">
           <div class="card sensory-card">
             <h3>Sensory Profile</h3>
 
             <ul class="list sensory-list">
-              <li><span class="dot"></span><span><strong>Texture:</strong> Silky, delicate pearls</span></li>
-              <li><span class="dot"></span><span><strong>Taste:</strong> Nutty, buttery, oceanic minerality</span></li>
-              <li><span class="dot"></span><span><strong>Aroma:</strong> Subtle, fresh, refined</span></li>
+              <li><span class="dot"></span><span id="textureText"><strong>Texture:</strong> Silky, delicate pearls</span></li>
+              <li><span class="dot"></span><span id="tasteText"><strong>Taste:</strong> Nutty, buttery, oceanic minerality</span></li>
+              <li><span class="dot"></span><span id="aromaText"><strong>Aroma:</strong> Subtle, fresh, refined</span></li>
             </ul>
 
             <div class="radar-wrap sensory-radar">
@@ -303,7 +317,7 @@
 
           <div class="card sensory-card">
             <h3>Suggested Pairings</h3>
-            <ul class="list sensory-list">
+            <ul class="list sensory-list" id="pairingsList">
               <li><span class="dot"></span><span>Champagne Brut — Effervescence lifts buttery notes.</span></li>
               <li><span class="dot"></span><span>Premium Vodka — Clean, crisp balance accentuates minerality.</span></li>
               <li><span class="dot"></span><span>Chablis / Sancerre — Bright acidity enhances oceanic freshness.</span></li>

@@ -62,27 +62,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function update(){
-  const tRect = tl.getBoundingClientRect();
-  const tlTop = tRect.top + window.scrollY;
-  const viewportBottom = window.scrollY + window.innerHeight;
+    const tRect = tl.getBoundingClientRect();
+    const tlTop = tRect.top + window.scrollY;
+    const viewportBottom = window.scrollY + window.innerHeight;
 
-  // ➜ se o usuário está acima da sessão (a parte de baixo do viewport
-  // ainda não alcançou o topo da timeline), resetamos tudo
-  if (viewportBottom < tlTop) {
-    progress.style.height = '0px';
-    items.forEach(el => el.classList.remove('is-visible'));
-    return;
+    // se o usuário está acima da sessão, reset
+    if (viewportBottom < tlTop) {
+      progress.style.height = '0px';
+      items.forEach(el => el.classList.remove('is-visible'));
+      return;
+    }
+
+    const visible = viewportBottom - (tlTop + start);
+    const height = Math.max(0, Math.min(visible, maxH));
+
+    progress.style.height = `${height}px`;
+
+    centers.forEach((pos, i) => {
+      if (height >= (pos - start) - 8) items[i].classList.add('is-visible');
+    });
   }
-
-  const visible = viewportBottom - (tlTop + start);
-  const height = Math.max(0, Math.min(visible, maxH));
-
-  progress.style.height = `${height}px`;
-
-  centers.forEach((pos, i) => {
-    if (height >= (pos - start) - 8) items[i].classList.add('is-visible');
-  });
-}
 
   const ro = new ResizeObserver(() => { measure(); update(); });
   ro.observe(tl);
@@ -90,95 +89,210 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('load', () => { measure(); update(); });
 })();
 
-// === Sensory Radar (auto-contido) ============================================
-(() => {
-  const svg = document.getElementById('radarChart');
-  if (!svg) return;
-
-  // Dados (0–1) nas 3 dimensões mostradas na lista: Texture, Taste, Aroma.
-  // Ajuste se quiser calibrar o desenho, mas pode usar esses valores padrão.
-  const values = [0.85, 0.78, 0.65]; // [Texture, Taste, Aroma]
-
-  const size = 220;
-  const cx = size / 2, cy = size / 2;
-  const radius = 90;           // raio útil
-  const levels = 4;            // linhas de grade
-  const strokeGrid = '#cfc8b7'; // --muted
-  const strokePoly = '#c8a96a'; // --gold
-
-  // util
-  const toPolar = (val, angleRad) => {
-    const r = val * radius;
-    return [cx + r * Math.cos(angleRad), cy + r * Math.sin(angleRad)];
+// === Sensory Profiles + Radar (tabs + desenho) ===============================
+(function(){
+  // Perfis sensoriais (fatos consolidados). Escala do radar: 0–1 (equiv. 3=0.6, 4=0.8, 5=1.0)
+  const PROFILES = {
+    "Oscietra": {
+      texture: "Silky, firm pearls with a gentle pop",
+      taste: "Nutty, buttery, creamy depth with subtle minerality",
+      aroma: "Clean, refined, faint sea-breeze",
+      pairings: [
+        "Champagne Blanc de Blancs (Brut) — Freshness lifts nutty/buttery notes.",
+        "Chablis / Sancerre — Precise acidity highlights minerality.",
+        "Premium Vodka — Neutral, palate-cleansing between bites.",
+        "Blinis & Crème Fraîche — Supports texture and creaminess."
+      ],
+      radar: [0.8, 0.8, 0.6]
+    },
+    "Schrenkii": {
+      texture: "Medium-large pearls, smooth pop, silky finish",
+      taste: "Roasted almond, creamy richness, subtle spice",
+      aroma: "Delicate with warm nut nuance",
+      pairings: [
+        "Champagne Blanc de Noirs (Brut) — Structure matches richness.",
+        "Junmai Daiginjo — Silky texture mirrors creaminess.",
+        "Riesling trocken — Brightness balances toasted notes.",
+        "Blinis with clarified butter — Echoes the nutty profile."
+      ],
+      radar: [0.8, 0.8, 0.6]
+    },
+    "Beluga": {
+      texture: "Extra-large pearls, ultra-soft, almost melting",
+      taste: "Buttery, very creamy, lingering with hints of hazelnut",
+      aroma: "Delicate, fresh, subtle iodine",
+      pairings: [
+        "Vintage Champagne (Brut) — Effervescence elevates unctuousness.",
+        "Chablis Grand Cru — Fine minerality complements delicacy.",
+        "Premium Vodka (ice-cold) — Keeps focus on caviar.",
+        "Ultra-thin blinis & light crème fraîche — Classic, unobtrusive base."
+      ],
+      radar: [1.0, 1.0, 0.6]
+    },
+    "Kaluga": {
+      texture: "Large pearls, firm pop with creamy finish",
+      taste: "Buttery, nutty, slight sweetness with gentle umami",
+      aroma: "Clean, moderate salinity",
+      pairings: [
+        "Champagne Brut — Structure and freshness for a fuller profile.",
+        "Dry Riesling (GG) — Firm acidity and citrus cleanse the palate.",
+        "Premium Vodka — Highlights butter and pop.",
+        "Buckwheat blinis — Balance for body and nut notes."
+      ],
+      radar: [0.8, 1.0, 0.6]
+    },
+    "Sevruga": {
+      texture: "Small pearls, more pronounced pop",
+      taste: "Marine-forward, evident salinity, subtle butter and mineral",
+      aroma: "More oceanic, saline",
+      pairings: [
+        "Champagne Extra-Brut — Dryness and lively bubbles for intensity.",
+        "Muscadet / Albariño — Salinity and citrus pair with marine notes.",
+        "Premium Vodka — Palate reset between servings.",
+        "Simple blinis — Neutral base that doesn’t compete."
+      ],
+      radar: [0.6, 0.6, 0.8]
+    },
+    "Baerii": {
+      texture: "Medium-small pearls, soft with a clean finish",
+      taste: "Balanced nutty-buttery character, restrained salinity, slight sweetness",
+      aroma: "Fresh, delicate, clean",
+      pairings: [
+        "Crémant or Champagne Brut Nature — Lift without weight.",
+        "Loire Sauvignon Blanc — Lively acidity enhances freshness.",
+        "Premium Vodka — Keeps the delicate profile in focus.",
+        "Crème fraîche & chives — Gentle herb note without dominance."
+      ],
+      radar: [0.6, 0.8, 0.6]
+    },
+    "Hybrid(s)": {
+      texture: "Generally large pearls with firm pop and creamy finish",
+      taste: "Buttery–nutty with a touch of umami/earth; medium–high intensity",
+      aroma: "Clean with subtle marine character",
+      pairings: [
+        "Champagne Brut — Versatile match for hybrid profiles.",
+        "Dry Riesling or Grüner Veltliner — Acidity and freshness cut through creaminess.",
+        "Premium Vodka — Transparent read of the blend.",
+        "Neutral blinis — Classic base for robust styles."
+      ],
+      radar: [0.8, 0.8, 0.6]
+    },
+    "Almas": {
+      texture: "Very large pearls, exceptionally delicate and silky",
+      taste: "Ultra-buttery, creamy and subtle, light nut sweetness",
+      aroma: "Refined, near-ethereal with discreet salinity",
+      pairings: [
+        "Vintage Blanc de Blancs — Elegance without overpowering.",
+        "Crystal-clear vodka, ice-cold — Absolute purity on the palate.",
+        "Fine Chablis (light oak or none) — Discreet minerality alongside.",
+        "Ultra-thin blinis & light crème fraîche — Maximum delicacy."
+      ],
+      radar: [1.0, 1.0, 0.8]
+    }
   };
 
-  // limpa antes de desenhar (idempotente)
-  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  // Desenha o radar no SVG #radarChart com 3 dimensões (Texture, Taste, Aroma)
+  function drawRadar(values){
+    const svg = document.getElementById('radarChart');
+    if (!svg || !values) return;
+    const size = 220, cx = size/2, cy = size/2, radius = 90, levels = 4;
+    const strokeGrid = '#cfc8b7', strokePoly = '#c8a96a';
 
-  // container (opcional, ajuda se quiser estilos futuros)
-  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-  g.setAttribute('transform', `translate(0,0)`);
-  svg.appendChild(g);
+    const toPolar = (val, ang) => [cx + (val*radius)*Math.cos(ang), cy + (val*radius)*Math.sin(ang)];
 
-  // grade (polígonos concêntricos)
-  for (let l = 1; l <= levels; l++) {
-    const frac = l / levels;
-    const pts = [];
-    for (let i = 0; i < values.length; i++) {
-      const angle = -Math.PI / 2 + (2 * Math.PI * i) / values.length;
-      const [x, y] = toPolar(frac, angle);
-      pts.push(`${x},${y}`);
+    // limpa
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    svg.appendChild(g);
+
+    // grade
+    for (let l=1;l<=levels;l++){
+      const frac=l/levels, pts=[];
+      for (let i=0;i<values.length;i++){
+        const a=-Math.PI/2+(2*Math.PI*i)/values.length;
+        pts.push(toPolar(frac,a).join(','));
+      }
+      const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+      poly.setAttribute('points', pts.join(' '));
+      poly.setAttribute('fill', 'none');
+      poly.setAttribute('stroke', strokeGrid);
+      poly.setAttribute('stroke-opacity', '0.25');
+      poly.setAttribute('stroke-width', '1');
+      g.appendChild(poly);
     }
-    const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
-    poly.setAttribute('points', pts.join(' '));
-    poly.setAttribute('fill', 'none');
-    poly.setAttribute('stroke', strokeGrid);
-    poly.setAttribute('stroke-opacity', '0.25');
-    poly.setAttribute('stroke-width', '1');
-    g.appendChild(poly);
+
+    // eixos
+    for (let i=0;i<values.length;i++){
+      const a=-Math.PI/2+(2*Math.PI*i)/values.length;
+      const [x,y]=toPolar(1,a);
+      const axis=document.createElementNS('http://www.w3.org/2000/svg','line');
+      axis.setAttribute('x1',cx); axis.setAttribute('y1',cy);
+      axis.setAttribute('x2',x);  axis.setAttribute('y2',y);
+      axis.setAttribute('stroke',strokeGrid);
+      axis.setAttribute('stroke-opacity','0.35');
+      axis.setAttribute('stroke-width','1');
+      g.appendChild(axis);
+    }
+
+    // polígono valores
+    const valPts = values.map((v,i)=>{
+      const a=-Math.PI/2+(2*Math.PI*i)/values.length;
+      return toPolar(v,a).join(',');
+    });
+    const polyVal=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    polyVal.setAttribute('points', valPts.join(' '));
+    polyVal.setAttribute('fill','none');
+    polyVal.setAttribute('stroke',strokePoly);
+    polyVal.setAttribute('stroke-width','2');
+    polyVal.setAttribute('stroke-linejoin','round');
+    g.appendChild(polyVal);
+
+    // marcadores
+    valPts.forEach(pt=>{
+      const [x,y]=pt.split(',').map(parseFloat);
+      const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r','2.5');
+      c.setAttribute('fill',strokePoly);
+      g.appendChild(c);
+    });
+
+    // a11y
+    svg.setAttribute('role','img');
+    svg.setAttribute('aria-label','Sensory radar chart');
   }
 
-  // eixos
-  for (let i = 0; i < values.length; i++) {
-    const angle = -Math.PI / 2 + (2 * Math.PI * i) / values.length;
-    const [x, y] = toPolar(1, angle);
-    const axis = document.createElementNS('http://www.w3.org/2000/svg','line');
-    axis.setAttribute('x1', cx); axis.setAttribute('y1', cy);
-    axis.setAttribute('x2', x);  axis.setAttribute('y2', y);
-    axis.setAttribute('stroke', strokeGrid);
-    axis.setAttribute('stroke-opacity', '0.35');
-    axis.setAttribute('stroke-width', '1');
-    g.appendChild(axis);
+  // Aplica um perfil completo (texto + pairings + radar)
+  function applyProfile(name){
+    const d = PROFILES[name];
+    if (!d) return;
+
+    const t = document.getElementById('textureText');
+    const ta = document.getElementById('tasteText');
+    const a = document.getElementById('aromaText');
+    const p = document.getElementById('pairingsList');
+
+    if (t && d.texture) t.innerHTML = `<strong>Texture:</strong> ${d.texture}`;
+    if (ta && d.taste)   ta.innerHTML = `<strong>Taste:</strong> ${d.taste}`;
+    if (a && d.aroma)    a.innerHTML = `<strong>Aroma:</strong> ${d.aroma}`;
+
+    if (p && Array.isArray(d.pairings))
+      p.innerHTML = d.pairings.map(x=>`<li><span class="dot"></span><span>${x}</span></li>`).join("");
+
+    if (Array.isArray(d.radar)) drawRadar(d.radar);
   }
 
-  // polígono de valores
-  const valPts = [];
-  for (let i = 0; i < values.length; i++) {
-    const angle = -Math.PI / 2 + (2 * Math.PI * i) / values.length;
-    const [x, y] = toPolar(values[i], angle);
-    valPts.push(`${x},${y}`);
-  }
-  const polyVal = document.createElementNS('http://www.w3.org/2000/svg','polygon');
-  polyVal.setAttribute('points', valPts.join(' '));
-  polyVal.setAttribute('fill', 'none');
-  polyVal.setAttribute('stroke', strokePoly);
-  polyVal.setAttribute('stroke-width', '2');
-  polyVal.setAttribute('stroke-linejoin', 'round');
-  g.appendChild(polyVal);
+  // Inicialização: desenha radar inicial e conecta tabs (data-species)
+  document.addEventListener('DOMContentLoaded', () => {
+    // Radar inicial com o perfil padrão da página (Oscietra)
+    if (PROFILES["Oscietra"]) drawRadar(PROFILES["Oscietra"].radar || [0.8,0.8,0.6]);
 
-  // pontinhos nos vértices
-  valPts.forEach(pt => {
-    const [x, y] = pt.split(',').map(parseFloat);
-    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', '2.5');
-    c.setAttribute('fill', strokePoly);
-    g.appendChild(c);
+    // Tabs
+    document.querySelectorAll('[data-species]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        document.querySelectorAll('[data-species]').forEach(b=>b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        applyProfile(btn.getAttribute('data-species'));
+      });
+    });
   });
-
-  // acessibilidade
-  svg.setAttribute('role', 'img');
-  svg.setAttribute('aria-label', 'Sensory radar chart');
-
-  // responsivo: o SVG já tem viewBox; não precisa redimensionar nada
 })();
-

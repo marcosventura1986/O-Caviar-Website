@@ -415,6 +415,25 @@ h4 {
   filter: none;
 }
 
+/* === Species Tabs (below header) === */
+.species-tabs{
+  position: sticky;
+  top: 68px; /* fica logo abaixo do header fixo */
+  z-index: 90;
+  border-bottom: 1px solid rgba(200,169,106,.14);
+}
+.tabs-row{
+  display:flex; gap:8px; align-items:center; justify-content:center; padding:10px 0; flex-wrap:wrap;
+}
+.tab{
+  font-size: 14px;
+  padding: 8px 14px;
+  background: transparent;
+}
+.tab.is-active{
+  background: linear-gradient(180deg, rgba(200,169,106,.20), rgba(185,122,60,.08));
+  border-color: var(--gold);
+}
 
 
 
