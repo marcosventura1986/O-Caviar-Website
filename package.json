@@ -1,0 +1,13 @@
+{
+  "name": "o-caviar-journal-processor",
+  "version": "1.0.0",
+  "description": "Automated article processor for Ó Caviar Journal CMS",
+  "main": "process-articles.js",
+  "scripts": {
+    "process": "node process-articles.js",
+    "build": "node process-articles.js"
+  },
+  "keywords": ["cms", "static-site", "journal", "caviar"],
+  "author": "Ó Caviar",
+  "license": "MIT"
+}

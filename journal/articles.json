@@ -1,0 +1,33 @@
+[
+  {
+    "slug": "irish-linen-stone",
+    "title": "Irish Linen & Stone: Textures of Heritage",
+    "date": "2024-12-01",
+    "excerpt": "Explore how traditional Irish craftsmanship creates the perfect backdrop for contemporary caviar service.",
+    "hero": "/assets/journal/irish-linen-stone-hero.jpg",
+    "tags": [
+      "heritage",
+      "craftsmanship",
+      "irish",
+      "tradition"
+    ]
+  },
+  {
+    "slug": "champagne-beluga-pairing",
+    "title": "Champagne & Beluga: The Perfect Symphony",
+    "date": "2024-11-15",
+    "excerpt": "Discover the art of pairing the finest Beluga caviar with premium champagne.",
+    "hero": "/assets/journal/champagne-beluga-hero.jpg",
+    "tags": [
+      "pairing",
+      "champagne",
+      "beluga",
+      "luxury"
+    ]
+  },
+  {
+    "slug": "serving-rituals-at-home",
+    "title": "Serving Rituals: Creating the Perfect Caviar Experience at Home",
+    "date": "2024-10-28",
+    "excerpt": "Transform your home into a sanctuary of refined taste.",
+    "hero": "/assets/journal/serving-rituals

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Journal — Ó Caviar</title>
+  <meta name="description" content="Discover the art of caviar through our curated collection of stories, traditions, and expertise. From perfect pairings to serving rituals, explore the journal of Ireland's finest caviar house." />
+  <meta name="theme-color" content="#0b0f0d" />
+  
+  <!-- Preconnect to fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&subset=latin&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="journal.css" />
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="articles.json" as="fetch" crossorigin="anonymous">
+  
+  <!-- SEO & Social Meta -->
+  <meta property="og:title" content="Journal — Ó Caviar" />
+  <meta property="og:description" content="Discover the art of caviar through our curated collection of stories, traditions, and expertise." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="../og-ocaviar.jpg" />
+  <meta property="og:url" content="https://ocaviar.example/journal/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Journal — Ó Caviar" />
+  <meta name="twitter:description" content="Discover the art of caviar through our curated collection of stories, traditions, and expertise." />
+  <meta name="twitter:image" content="../og-ocaviar.jpg" />
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://ocaviar.example/journal/" />
+  
+  <!-- Robots -->
+  <meta name="robots" content="index, follow" />
+</head>
+
+<body class="journal">
+
+  <!-- Skip to content link for accessibility -->
+  <a href="#main-content" class="journal-skip-link">Skip to main content</a>
+
+  <!-- Site Header (inherit from main site) -->
+    <!-- ========= Navigation ========= -->
+  <header class="site-header" id="header">
+    <div class="container nav">
+      <a class="brand" href="../#top" aria-label="Ó Caviar home">
+        <img src="../images/inline_logo.svg" class="logo logo--inline" alt="Ó Caviar — Inline" role="img">
+      </a>
+      <nav class="menu" aria-label="Primary">
+        <a href="../#about">About</a>
+        <a href="../#collection">Collection</a>
+        <a href="../#maturation">Process</a>
+        <a href="../#mv">Mission & Vision</a>
+        <a href="../#journal">Journal</a>
+        <a href="../#sensory">Sensory Journey</a>
+        <a href="../#footer">Contact</a>
+        <a href="../#shop" class="btn pill">Shop</a>
+      </nav>
+      <button class="hamburger" aria-expanded="false" aria-controls="drawer" onclick="toggleDrawer()">Menu ▾</button>
+    </div>
+    <div id="drawer" class="mobile-drawer container" role="dialog" aria-modal="true" aria-label="Mobile menu">
+      <a href="../#about" onclick="toggleDrawer(false)">About</a>
+      <a href="../#collection" onclick="toggleDrawer(false)">Collection</a>
+      <a href="../#maturation" onclick="toggleDrawer(false)">Process</a>
+      <a href="../#mv" onclick="toggleDrawer(false)">Mission & Vision</a>
+      <a href="../#journal" onclick="toggleDrawer(false)">Journal</a>
+      <a href="../#sensory" onclick="toggleDrawer(false)">Sensory Journey</a>
+      <a href="../#footer" onclick="toggleDrawer(false)">Contact</a>
+      <a href="../#shop" onclick="toggleDrawer(false)">Shop</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content" class="journal-main">
+    <div class="journal-container">
+      
+      <!-- Journey Header -->
+      <header class="journal-header">
+        <h1 class="journal-title">Journal</h1>
+        <p class="journal-subtitle">
+          Discover the artistry behind Ireland's finest caviar. From perfect pairings to time-honored traditions, 
+          explore the stories that define our craft and elevate your appreciation for this exquisite delicacy.
+        </p>
+      </header>
+
+      <!-- Loading State -->
+      <div id="loading-state" class="journal-loading" aria-live="polite">
+        <p>Loading articles...</p>
+      </div>
+
+      <!-- Error State with Graceful Fallback -->
+      <div id="error-state" class="journal-error" hidden aria-live="assertive">
+        <div class="journal-error-message">
+          <p>We're having trouble loading our latest articles.</p>
+        </div>
+        
+        <!-- Fallback Content for No-JS -->
+        <div class="journal-fallback">
+          <h3>Featured Articles</h3>
+          <p>
+            Explore our curated collection of articles about the art of caviar. 
+            <a href="champagne-beluga-pairing/" style="color: var(--gold)">Discover perfect pairings</a> 
+            or learn about <a href="serving-rituals-at-home/" style="color: var(--gold)">traditional serving rituals</a>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Articles Grid -->
+      <div id="articles-grid" class="journal-grid" hidden>
+        <!-- Articles will be populated by JavaScript -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========= CTA / Shop ========= -->
+  <section id="shop" class="section cta-section">
+    <div class="container cta">
+      <div>
+        <h2>Indulge in Ó Caviar</h2>
+        <p class="lead">Explore the collection and experience affinage at its finest.</p>
+      </div>
+      <a class="btn primary" href="../#shop">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- ========= Footer ========= -->
+  <footer id="footer" class="site-footer">
+    <div class="container footgrid">
+      <div>
+        <div class="brand">
+          <img src="../images/stacked_logo.svg" class="logo logo--stacked" alt="Ó Caviar — Stacked" role="img">
+        </div>
+      </div>
+      <div>
+        <div class="kicker">Explore</div>
+        <a href="../#about">About</a><br/>
+        <a href="../#collection">Collection</a><br/>
+        <a href="../#maturation">Process</a><br/>
+        <a href="../#journal">Journal</a>
+      </div>
+      <div>
+        <div class="kicker">Contact</div>
+        <a href="mailto:hello@ocaviar.com">hello@ocaviar.com</a><br/>
+        <span class="muted">Wicklow, Ireland</span>
+      </div>
+    </div>
+    
+    <!-- Copyright centered below footer grid -->
+    <div class="copyright-container">
+      <p class="copy copyright-text">© <span id="year"></span> Ó Caviar. <span class="copyright-break">All rights reserved.</span> Elevating the legacy of sturgeon.</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript for Dynamic Content -->
+  <script>
+  (function() {
+    'use strict';
+    
+    // Cache DOM elements
+    const loadingState = document.getElementById('loading-state');
+    const errorState = document.getElementById('error-state');
+    const articlesGrid = document.getElementById('articles-grid');
+    
+    // Utility function to format date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      };
+      return date.toLocaleDateString('en-US', options);
+    }
+    
+    // Utility function to calculate reading time (approx 200 words per minute)
+    function calculateReadingTime(text) {
+      const wordsPerMinute = 200;
+      const wordCount = text.split(/\s+/).length;
+      const minutes = Math.ceil(wordCount / wordsPerMinute);
+      return minutes;
+    }
+    
+    // Create article card element
+    function createArticleCard(article) {
+      const card = document.createElement('a');
+      card.href = `${article.slug}/`;
+      card.className = 'journal-card';
+      card.setAttribute('aria-label', `Read article: ${article.title}`);
+      
+      // Calculate reading time from excerpt (approximate)
+      const readingTime = calculateReadingTime(article.excerpt);
+      
+      card.innerHTML = `
+        <div class="journal-card-image-wrapper">
+          <img 
+            src="${article.hero}" 
+            alt="Hero image for ${article.title}"
+            class="journal-card-image"
+            loading="lazy"
+            fetchpriority="low"
+            width="400"
+            height="225"
+            style="aspect-ratio: 16/9"
+          />
+        </div>
+        <div class="journal-card-content">
+          <div class="journal-card-meta">
+            <time datetime="${article.date}">${formatDate(article.date)}</time>
+            <span class="journal-reading-time"> • ${readingTime} min read</span>
+          </div>
+          <h2 class="journal-card-title">${article.title}</h2>
+          <p class="journal-card-excerpt">${article.excerpt}</p>
+          ${article.tags ? `
+            <div class="journal-card-tags">
+              ${article.tags.map(tag => `<span class="journal-tag">${tag}</span>`).join('')}
+            </div>
+          ` : ''}
+        </div>
+      `;
+      
+      return card;
+    }
+    
+    // Show error state
+    function showError() {
+      loadingState.hidden = true;
+      errorState.hidden = false;
+      articlesGrid.hidden = true;
+    }
+    
+    // Show articles
+    function showArticles(articles) {
+      loadingState.hidden = true;
+      errorState.hidden = true;
+      articlesGrid.hidden = false;
+      
+      // Clear existing articles
+      articlesGrid.innerHTML = '';
+      
+      // Sort articles by date (newest first)
+      const sortedArticles = articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      // Create and append article cards
+      sortedArticles.forEach(article => {
+        const card = createArticleCard(article);
+        articlesGrid.appendChild(card);
+      });
+      
+      // Announce to screen readers
+      const announcement = document.createElement('div');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.setAttribute('aria-atomic', 'true');
+      announcement.className = 'sr-only';
+      announcement.textContent = `${articles.length} articles loaded successfully`;
+      document.body.appendChild(announcement);
+      
+      // Remove announcement after screen readers have processed it
+      setTimeout(() => {
+        document.body.removeChild(announcement);
+      }, 1000);
+    }
+    
+    // Fetch and display articles
+    async function loadArticles() {
+      try {
+        const response = await fetch('articles.json');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const articles = await response.json();
+        
+        if (!Array.isArray(articles) || articles.length === 0) {
+          throw new Error('No articles found');
+        }
+        
+        showArticles(articles);
+        
+      } catch (error) {
+        console.error('Failed to load articles:', error);
+        showError();
+      }
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadArticles);
+    } else {
+      loadArticles();
+    }
+    
+    // Add screen reader only class for announcements
+    const style = document.createElement('style');
+    style.textContent = `
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+    `;
+    document.head.appendChild(style);
+    
+  })();
+  </script>
+
+  <!-- Main Site JavaScript Functions -->
+  <script>
+    // Mobile menu toggle
+    function toggleDrawer(force) {
+      const hamburger = document.querySelector('.hamburger');
+      const drawer = document.getElementById('drawer');
+      
+      if (typeof force === 'boolean') {
+        hamburger.setAttribute('aria-expanded', force.toString());
+        drawer.hidden = !force;
+        if (force) {
+          drawer.style.display = 'flex';
+        } else {
+          drawer.style.display = 'none';
+        }
+        return;
+      }
+      
+      const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
+      hamburger.setAttribute('aria-expanded', (!isOpen).toString());
+      drawer.hidden = isOpen;
+      if (!isOpen) {
+        drawer.style.display = 'flex';
+      } else {
+        drawer.style.display = 'none';
+      }
+    }
+
+    // Set copyright year
+    document.addEventListener('DOMContentLoaded', function() {
+      const yearSpan = document.getElementById('year');
+      if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+      }
+    });
+  </script>
+
+  <!-- NoScript fallback -->
+  <noscript>
+    <style>
+      #loading-state, #articles-grid { display: none; }
+      #error-state { display: block; }
+    </style>
+  </noscript>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Journal Integration</title>
+</head>
+<body>
+    <h1>Testing Journal Cards</h1>
+    <div id="journal-cards" class="grid-3"></div>
+    
+    <script>
+    async function loadLatestArticles() {
+        try {
+            console.log('Loading articles...');
+            const response = await fetch('/journal/articles.json');
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const articles = await response.json();
+            console.log('Loaded articles:', articles);
+            
+            // Sort by date (most recent first) and take top 3
+            const latestArticles = articles
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 3);
+            
+            console.log('Latest articles:', latestArticles);
+            renderJournalCards(latestArticles);
+        } catch (error) {
+            console.error('Failed to load journal articles:', error);
+        }
+    }
+
+    function renderJournalCards(articles) {
+        const container = document.getElementById('journal-cards');
+        
+        container.innerHTML = articles.map(article => `
+            <article style="border: 1px solid #ccc; padding: 20px; margin: 10px;">
+                <img src="${article.hero}" alt="${article.title}" style="width: 100%; height: 200px; object-fit: cover;">
+                <h3>${article.title}</h3>
+                <p>${article.excerpt}</p>
+                <a href="journal/${article.slug}/">Read More</a>
+            </article>
+        `).join('');
+    }
+
+    // Load articles when page loads
+    loadLatestArticles();
+    </script>
+</body>
+</html>
