@@ -19,4 +19,4 @@ collections:
       - {label: "Content", name: "body", widget: "markdown"}
       - {label: "Tags", name: "tags", widget: "list", default: ["caviar"]}
       - {label: "Slug", name: "slug", widget: "string", hint: "URL-friendly name (lowercase, hyphens only)"}
-      - {label: "Layout", name: "layout", 
+      - {label: "Layout", name: "layout", widget: "hidden", default: "article"}
