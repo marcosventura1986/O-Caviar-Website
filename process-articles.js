@@ -339,6 +339,13 @@ function generateArticleHTML(article) {
       </div>
     </div>
     
+    <!-- Legal Links -->
+    <div style="border-top: 1px solid rgba(255,255,255,.06); margin-top: 40px; padding-top: 20px; text-align: center;">
+      <a href="../../cookies-policy.html" style="color: var(--muted); font-size: 13px; text-decoration: underline; margin: 0 12px;">Cookies Policy</a>
+      <span style="color: var(--muted); font-size: 13px;">•</span>
+      <a href="../../terms-and-conditions.html" style="color: var(--muted); font-size: 13px; text-decoration: underline; margin: 0 12px;">Terms & Conditions</a>
+    </div>
+
     <!-- Copyright centered below footer grid -->
     <div class="copyright-container">
       <p class="copy copyright-text">© <span id="year"></span> Ó Caviar. <span class="copyright-break">All rights reserved.</span> Elevating the legacy of sturgeon.</p>
