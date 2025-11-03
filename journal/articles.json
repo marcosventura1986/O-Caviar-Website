@@ -1,5 +1,18 @@
 [
   {
+    "slug": "test_slug",
+    "title": "THIS IS A VERY ELEGANT TEST THAT WILL WORK NOW",
+    "date": "2025-11-03T20:24:16.245Z",
+    "excerpt": "Elegant test, the best test",
+    "hero": "/assets/journal/esturjao1.png",
+    "tags": [
+      "caviar",
+      "teste",
+      "pearl",
+      "tag"
+    ]
+  },
+  {
     "slug": "irish-linen-stone",
     "title": "Irish Linen & Stone: Textures of Heritage",
     "date": "2024-12-01",
