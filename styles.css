@@ -599,4 +599,360 @@ h4 {
   isolation: isolate;
   padding: 100px 0;
   background: none;
-  color: var(--emera
+  color: var(--emerald);
+}
+
+.sensory .section-head--center{
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+/* Camada de textura */
+.sensory-bg{
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8)),
+    url('images/white_marble.jpg') center/cover no-repeat;
+  background-attachment: fixed; /* leve profundidade */
+  image-rendering: -webkit-optimize-contrast;
+  filter: none;
+}
+
+/* === Species Tabs (below header) === */
+.species-tabs{
+  top: 68px; /* fica logo abaixo do header fixo */
+  z-index: 90;
+  border-bottom: 1px solid rgba(200,169,106,.14);
+}
+.tabs-row{
+  display:flex; gap:8px; align-items:center; justify-content:center; padding:10px 0; flex-wrap:wrap;
+}
+.tab{
+  font-size: 14px;
+  padding: 8px 14px;
+  background: transparent;
+}
+.tab.is-active{
+  background: linear-gradient(180deg, rgba(200,169,106,.20), rgba(185,122,60,.08));
+  border-color: var(--gold);
+}
+
+
+
+/* --- LISTS & CHIPS --- */
+.list{display:grid; gap:10px; margin:10px 0}
+.list li{display:flex; gap:10px}
+.list .dot{width:8px; height:8px; border-radius:50%; background:var(--gold); margin-top:10px}
+
+/* --- CTA --- */
+.cta{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  border:1px solid rgba(200,169,106,.25); border-radius:var(--radius);
+  background:linear-gradient(180deg, rgba(200,169,106,.08), rgba(200,169,106,.02));
+  padding:24px;
+}
+.cta-section{border-top:1px solid rgba(255,255,255,.06)}
+
+/* --- BUTTONS --- */
+.btn{
+  font-family:'Poppins', sans-serif;
+  padding:12px 18px; border-radius:999px;
+  border:1px solid rgba(200,169,106,.35);
+  transition:.2s all ease; display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover{transform:translateY(-1px); box-shadow:0 4px 24px rgba(200,169,106,.18)}
+.btn.primary{background:linear-gradient(180deg, rgba(200,169,106,.20), rgba(185,122,60,.08)); border-color:var(--gold)}
+
+.ghost{
+  background:transparent;
+  border: 1px solid rgba(17, 22, 20, .15);
+  }
+
+
+
+
+
+/* --- FOOTER --- */
+.site-footer{padding:40px 0 60px; border-top:1px solid rgba(255,255,255,.06); color:#cfc8b7}
+.footgrid{display:grid; grid-template-columns:2fr 1fr 1fr; gap:20px}
+.copy{font-size:13px; color:#bdb7a6; font-family:'Poppins', sans-serif;}
+
+/* Footer links espaçamento menor */
+.footgrid a {
+  line-height: 1.3;         /* linha mais compacta nos links */
+}
+
+/* Copyright container */
+.copyright-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  padding-bottom: 2rem;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.copyright-text {
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* Classe para elementos decorativos centralizados */
+.decorative-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+
+
+/* --- MOBILE --- */
+.mobile-drawer{
+  display:none; position:fixed; inset:60px 10px auto 10px;
+  background:var(--bg-soft); border:1px solid rgba(200,169,106,.25);
+  border-radius:16px; padding:14px; z-index:99;
+  max-width: 375px;
+}
+.mobile-drawer a{
+  display:block; padding:12px 8px; border-bottom:1px solid rgba(255,255,255,.06);
+  font-family:'Poppins', sans-serif;
+}
+.mobile-drawer a:last-child{border-bottom:none}
+
+
+
+
+/* ============================================================================
+   MEDIA QUERIES
+   ============================================================================ */
+
+/* Desktop Large Screens */
+@media (min-width: 1400px){
+  .c-slide{ flex-basis: calc((100% - 16px*3) / 4); }
+}
+
+/* Desktop Screens */
+@media (min-width: 1100px){
+  .c-slide{ flex-basis: calc((100% - 16px*2) / 3); }
+}
+
+/* Large Tablets & Small Desktops */
+@media (min-width: 900px){
+  .oc-carousel{ padding-inline: 40px; }
+  .c-prev{ transform: translate(-100%, -50%); }
+  .c-next{ transform: translate(100%, -50%); }
+  .c-prev:hover{ transform: translate(-100%, -50%) scale(1.05); }
+  .c-next:hover{ transform: translate(100%, -50%) scale(1.05); }
+  .mv-grid::before{
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 4px;
+    bottom: 4px;
+    width: 1px;
+    transform: translateX(-50%);
+    background:
+      linear-gradient(180deg, rgba(200,169,106,.00), rgba(200,169,106,.25) 40%, rgba(185,122,60,.35) 60%, rgba(200,169,106,.00));
+    box-shadow: 0 0 18px rgba(200,169,106,.18);
+    opacity: .9;
+    pointer-events: none;
+  }
+}
+
+/* Tablets & Medium Screens */
+@media (max-width: 950px){
+  .grid-3{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+  .menu{display:none}
+  .hamburger{display:inline-flex; align-items:center; gap:8px}
+  .t-item {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding-left: 24px;
+  }
+  .timeline-line {
+    left: 10px;
+    top: -30px;
+    bottom: -30px;
+    transform: none;
+  }
+  .t-item .t-media {
+    order: unset;
+  }
+  .t-item::before {
+    left: 8px;
+    top: calc(50% - 15px);
+    transform: translate(0, 0) scale(.6);
+    width: 30px;
+    height: 30px;
+  }
+  .t-item.is-visible::before {
+    transform: translate(0,0) scale(.8);
+  }
+}
+
+/* Mobile & Small Screens */
+@media (max-width: 720px) {
+  .container{
+    padding:15px 24px !important;  /* margens consistentes nas laterais */
+  }
+  
+  /* Copyright container and overflow fixes */
+  .copyright-container {
+    padding-left: 24px;     /* margens consistentes com o resto do site */
+    padding-right: 24px;
+  }
+  
+  .copyright-break {
+    display: block;         /* força quebra de linha após "All rights reserved" */
+  }
+  
+  /* Previne overflow horizontal no body */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Carousel responsive styles */
+  .c-slide{ flex-basis: 82%; }
+  .oc-carousel{ padding-inline: 14px; }
+  .c-prev{ transform: translate(-80%, -50%); }
+  .c-next{ transform: translate(80%, -50%); }
+  .c-arrow{ width: 38px; height: 38px; }
+  .c-prev:hover{ transform: translate(-80%, -50%) scale(1.05); }
+  .c-next:hover{ transform: translate(80%, -50%) scale(1.05); }
+
+  /* Header com margens consistentes */
+  .site-header .nav {
+    padding: 24px 24px !important;       /* mais altura no mobile + margens consistentes */
+  }
+
+  /* Melhor responsividade para o footer */
+  .site-footer{
+    text-align: center;       /* centraliza todo conteudo do footer no mobile */
+    overflow-x: clip;         /* previne overflow horizontal */
+  }
+
+  /* Footer em 1 coluna no mobile */
+  .footgrid{
+    grid-template-columns: 1fr !important;
+    gap: 24px;
+    text-align: center;
+    max-width: 100%;          /* garante que não ultrapasse a largura */
+  }
+
+  /* SVG logo nunca deve ultrapassar a largura do container */
+  .logo{ 
+    max-width: 100%;
+  }
+  .site-footer .logo--stacked{
+    height: 120px;
+    width: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Links do footer mais compactos */
+  .footgrid a {
+    line-height: 1.2;
+  }
+
+  /* Hero banner com margens consistentes */
+  .hero-inner {
+    padding: 80px 0;      /* apenas padding vertical, horizontal vem do .container */
+  }
+
+   /* 1) Itens em coluna única e texto centralizado */
+  .t-item{
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding-left: 0;          /* remove recuo que empurrava tudo à esquerda */
+    text-align: center;
+    align-items: start;
+  }
+
+  /* 2) Imagem sempre acima do texto */
+  .t-item .t-media{
+    order: -1;                /* imagem antes do .t-body */
+    justify-self: center;
+    position: relative;
+    z-index: 1;               /* atrás da linha */
+  }
+  .t-item .t-media img{
+    display: block;
+    max-width: min(420px, 86vw);
+    height: auto;
+  }
+
+  /* 3) Texto centralizado e acima da linha */
+  .t-item .t-body{
+    justify-self: center;
+    position: relative;
+    z-index: 3;               /* acima da linha */
+    padding: 1.2rem 1rem;
+    border-radius: var(--radius, 12px);
+    /* 💡 fundo sólido ou gradiente (sem transparência) */
+    background: linear-gradient(
+      180deg,
+      #0b0f0d 0%,
+      #141a17 100%
+    );
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+
+  /* 4) Linha centralizada e com leve transparência no mobile */
+  .timeline-line{
+    left: 50%;
+    top: -30px;
+    bottom: -30px;
+    transform: translateX(-50%);
+    z-index: -3;               /* acima da imagem, abaixo do texto */
+  }
+  .timeline-line .progress{
+    left: 50%;
+    transform: translate(-50%, 25px);
+    opacity: .65;             /* um pouco mais suave no mobile */
+    box-shadow: 0 0 14px rgba(200,169,106,.16);
+  }
+
+  /* 5) Símbolo Ogham de cada item centralizado também */
+  .t-item::before{
+    left: 50%;
+    top: calc(50% - 15px);
+    transform: translate(-50%, 12px) scale(.6);
+    width: 30px;
+    height: 30px;
+  }
+  .t-item.is-visible::before{
+    transform: translate(-50%, 0) scale(.8);
+  }
+
+  /* Quebra elegante de URLs/emails se necessário */
+  .site-footer a,
+  .site-footer .copy,
+  .site-footer .muted{
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .cta {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 24px;
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce){
+  .t-item, .t-item .t-media, .t-item .t-body{ transition:none!important; transform:none!important; opacity:1!important; }
+  .timeline-line .progress{ transition:none!important; }
+}
+
+
+
