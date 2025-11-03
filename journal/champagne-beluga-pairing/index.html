@@ -68,38 +68,32 @@
   <a href="#main-content" class="journal-skip-link">Skip to main content</a>
 
   <!-- Site Header -->
-  <header class="site-header">
-    <nav class="nav-container">
-      <div class="nav-brand">
-        <a href="../../" aria-label="Ó Caviar Home">
-          <img src="../../images/inline_logo.svg" alt="Ó Caviar" class="logo">
-        </a>
-      </div>
-      
-      <ul class="nav-links">
-        <li><a href="../../#about">About</a></li>
-        <li><a href="../../#collection">Collection</a></li>
-        <li><a href="../../#process">Process</a></li>
-        <li><a href="../../#mission">Mission & Vision</a></li>
-        <li><a href="../">Journal</a></li>
-        <li><a href="../../#sensory">Sensory Journey</a></li>
-        <li><a href="../../#contact">Contact</a></li>
-        <li><a href="../../#shop">Shop</a></li>
-      </ul>
-
-      <button class="hamburger" onclick="toggleDrawer()" aria-label="Toggle navigation menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </nav>
-
-      <div id="drawer" class="drawer">
+    <!-- Site Header -->
+  <header class="site-header" id="header">
+    <div class="container nav">
+      <a class="brand" href="../../" aria-label="Ó Caviar home">
+        <img src="../../images/inline_logo.svg" class="logo logo--inline" alt="Ó Caviar — Inline" role="img">
+      </a>
+      <nav class="menu" aria-label="Primary">
+        <a href="../../#about">About</a>
+        <a href="../../#collection">Collection</a>
+        <a href="../../#maturation">Process</a>
+        <a href="../../#mv">Mission & Vision</a>
+        <a href="../">Journal</a>
+        <a href="../../#sensory">Sensory Journey</a>
+        <a href="../../#footer">Contact</a>
+        <a href="../../#shop" class="btn pill">Shop</a>
+      </nav>
+      <button class="hamburger" aria-expanded="false" aria-controls="drawer" onclick="toggleDrawer()">Menu ▾</button>
+    </div>
+    <div id="drawer" class="mobile-drawer container" role="dialog" aria-modal="true" aria-label="Mobile menu">
       <a href="../../#about" onclick="toggleDrawer(false)">About</a>
       <a href="../../#collection" onclick="toggleDrawer(false)">Collection</a>
-      <a href="../../#process" onclick="toggleDrawer(false)">Process</a>
-      <a href="../../#mission" onclick="toggleDrawer(false)">Mission & Vision</a>
+      <a href="../../#maturation" onclick="toggleDrawer(false)">Process</a>
+      <a href="../../#mv" onclick="toggleDrawer(false)">Mission & Vision</a>
       <a href="../" onclick="toggleDrawer(false)">Journal</a>
       <a href="../../#sensory" onclick="toggleDrawer(false)">Sensory Journey</a>
-      <a href="../../#contact" onclick="toggleDrawer(false)">Contact</a>
+      <a href="../../#footer" onclick="toggleDrawer(false)">Contact</a>
       <a href="../../#shop" onclick="toggleDrawer(false)">Shop</a>
     </div>
   </header>
@@ -161,40 +155,30 @@
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-brand">
-          <img src="../../images/stacked_logo.svg" alt="Ó Caviar" class="footer-logo">
-          <p>Ireland's first caviar house, dedicated to maturing the world's finest caviar to its peak expression.</p>
-        </div>
-        
-        <div class="footer-links">
-          <div class="footer-column">
-            <h4>Discover</h4>
-            <a href="../../#about">About</a>
-            <a href="../../#process">Process</a>
-            <a href="../">Journal</a>
-          </div>
-          
-          <div class="footer-column">
-            <h4>Collection</h4>
-            <a href="../../#collection">Our Caviar</a>
-            <a href="../../#sensory">Sensory Journey</a>
-            <a href="../../#shop">Shop</a>
-          </div>
-          
-          <div class="footer-column">
-            <h4>Connect</h4>
-            <a href="../../#contact">Contact</a>
-            <a href="../../#mission">Mission</a>
-          </div>
+  <footer id="footer" class="site-footer">
+    <div class="container footgrid">
+      <div>
+        <div class="brand">
+          <img src="../../images/stacked_logo.svg" class="logo logo--stacked" alt="Ó Caviar — Stacked" role="img">
         </div>
       </div>
-      
-      <div class="footer-bottom">
-        <p>&copy; 2025 Ó Caviar. All rights reserved.</p>
+      <div>
+        <div class="kicker">Explore</div>
+        <a href="../../#about">About</a><br/>
+        <a href="../../#collection">Collection</a><br/>
+        <a href="../../#maturation">Process</a><br/>
+        <a href="../">Journal</a>
       </div>
+      <div>
+        <div class="kicker">Contact</div>
+        <a href="mailto:hello@ocaviar.com">hello@ocaviar.com</a><br/>
+        <span class="muted">Wicklow, Ireland</span>
+      </div>
+    </div>
+    
+    <!-- Copyright centered below footer grid -->
+    <div class="copyright-container">
+      <p class="copy copyright-text">© <span id="year"></span> Ó Caviar. <span class="copyright-break">All rights reserved.</span> Elevating the legacy of sturgeon.</p>
     </div>
   </footer>
 

@@ -317,7 +317,7 @@ h4 {
   /* raio aplica de verdade */
   border-radius: var(--radius);
 
-  /* criamos uma borda “virtual” com gradiente */
+  /* criamos uma borda "virtual" com gradiente */
   border: 1px solid transparent;
   background:
     linear-gradient(transparent, transparent) padding-box,            /* centro transparente */
@@ -326,6 +326,8 @@ h4 {
   /* ajuda a evitar artefatos em alguns browsers */
   background-clip: padding-box, border-box;
   /* overflow: hidden;  <- deixe comentado; ative se notar serrilhado nos cantos */
+
+  min-height: 550px;
 }
 
 .product .ph, .ph{
@@ -334,7 +336,18 @@ h4 {
   display:grid; place-items:center; color:#b3a990; font-size:14px;
 }
 .ph-tall .ph{aspect-ratio:3/4}
-.product .body{padding:12px}
+.product{
+  position: relative;
+}
+.product .body{
+  padding:12px;
+  padding-bottom: 60px;
+}
+.product .body .btn{
+  position: absolute;
+  bottom: 18px;
+  right: 12px;
+}
 
 /* --- COLLECTION --- */
 .collection {
