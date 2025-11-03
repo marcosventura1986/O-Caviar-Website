@@ -2,6 +2,10 @@
    JOURNAL SECTION - SCOPED STYLES
    Minimal CSS scoped to .journal namespace to avoid conflicts
    Uses existing site CSS variables for consistency
+   
+   IMAGE SIZING: See IMAGE-SIZES.md for full documentation
+   - Journal cards: 16:9 aspect ratio (800×450px recommended)
+   - All images use object-fit: cover for consistency
    ======================================================================== */
 
 /* Journey namespace - all styles scoped to avoid conflicts */
