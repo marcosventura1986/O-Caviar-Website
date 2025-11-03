@@ -630,7 +630,6 @@
   padding: 14px 28px;
   letter-spacing: 0.03em;
   background: linear-gradient(135deg, rgba(200, 169, 106, 0.15), rgba(185, 122, 60, 0.08));
-  border: 2px solid var(--gold);
   color: var(--gold);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
