@@ -1,9 +1,16 @@
 [build]
   publish = "."
-  command = "echo 'Static site - no build needed'"
+  command = "node process-articles.js"
   functions = "netlify/functions"
 
+# Redirect admin panel to index.html for SPA routing
 [[redirects]]
   from = "/admin/*"
   to = "/admin/index.html"
   status = 200
+
+# Redirect article routes
+[[redirects]]
+  from = "/journal/:slug"
+  to = "/journal/:slug/"
+  status = 301

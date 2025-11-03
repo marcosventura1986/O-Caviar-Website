@@ -3,6 +3,7 @@
 /**
  * Automated Journal Article Processor
  * Converts Netlify CMS markdown files to complete article system
+ * Syncs articles.json with markdown files and manages article directories
  */
 
 const fs = require('fs').promises;
@@ -10,17 +11,30 @@ const path = require('path');
 
 async function processArticles() {
     console.log('🚀 Processing CMS articles...');
+    console.log('📌 Location:', __dirname);
     
     try {
         // Read all markdown files from _articles
         const articlesDir = path.join(__dirname, 'journal', '_articles');
+        
+        // Ensure directory exists
+        try {
+            await fs.access(articlesDir);
+        } catch (err) {
+            console.warn(`⚠️  Articles directory not found at: ${articlesDir}`);
+            console.warn('Creating directory...');
+            await fs.mkdir(articlesDir, { recursive: true });
+        }
+
         const files = await fs.readdir(articlesDir);
         const markdownFiles = files.filter(file => file.endsWith('.md'));
         
-        console.log(`📄 Found ${markdownFiles.length} articles to process`);
+        console.log(`📄 Found ${markdownFiles.length} markdown files to process`);
         
         const articles = [];
+        const processedSlugs = new Set();
         
+        // Process each markdown file
         for (const file of markdownFiles) {
             const filePath = path.join(articlesDir, file);
             const content = await fs.readFile(filePath, 'utf8');
@@ -34,13 +48,21 @@ async function processArticles() {
                     article.slug = file.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '');
                 }
                 
+                processedSlugs.add(article.slug);
+                
+                // Validate article data
+                if (!article.title || !article.date) {
+                    console.warn(`⚠️  Skipping "${file}" - missing title or date`);
+                    continue;
+                }
+                
                 // Add to articles array
                 articles.push({
                     slug: article.slug,
                     title: article.title,
                     date: article.date,
-                    excerpt: article.excerpt,
-                    hero: article.hero,
+                    excerpt: article.excerpt || 'No excerpt provided',
+                    hero: article.hero || '/assets/journal/default-hero.jpg',
                     tags: article.tags || ['caviar']
                 });
                 
@@ -48,17 +70,20 @@ async function processArticles() {
                 await createArticlePage(article);
                 
                 console.log(`✅ Processed: ${article.title}`);
+            } else {
+                console.warn(`⚠️  Failed to parse: ${file}`);
             }
         }
         
-        // Update articles.json with all articles (existing + new)
-        await updateArticlesJSON(articles);
+        // Update articles.json and clean up orphaned directories
+        await updateArticlesJSON(articles, processedSlugs);
         
         console.log('🎉 All articles processed successfully!');
-        console.log('📋 Your client can now see their articles on the website');
+        console.log(`� Total articles: ${articles.length}`);
         
     } catch (error) {
         console.error('❌ Error processing articles:', error);
+        process.exit(1);
     }
 }
 
@@ -206,39 +231,32 @@ function generateArticleHTML(article) {
   <!-- Skip to content link -->
   <a href="#main-content" class="journal-skip-link">Skip to main content</a>
 
-  <!-- Site Header -->
-  <header class="site-header">
-    <nav class="nav-container">
-      <div class="nav-brand">
-        <a href="../../" aria-label="Ó Caviar Home">
-          <img src="../../images/inline_logo.svg" alt="Ó Caviar" class="logo">
-        </a>
-      </div>
-      
-      <ul class="nav-links">
-        <li><a href="../../#about">About</a></li>
-        <li><a href="../../#collection">Collection</a></li>
-        <li><a href="../../#process">Process</a></li>
-        <li><a href="../../#mission">Mission & Vision</a></li>
-        <li><a href="../">Journal</a></li>
-        <li><a href="../../#sensory">Sensory Journey</a></li>
-        <li><a href="../../#contact">Contact</a></li>
-        <li><a href="../../#shop">Shop</a></li>
-      </ul>
-
-      <button class="hamburger" onclick="toggleDrawer()" aria-label="Toggle navigation menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </nav>
-
-      <div id="drawer" class="drawer">
+  <!-- Site Header (matches existing article pages) -->
+  <header class="site-header" id="header">
+    <div class="container nav">
+      <a class="brand" href="../../" aria-label="Ó Caviar home">
+        <img src="../../images/inline_logo.svg" class="logo logo--inline" alt="Ó Caviar — Inline" role="img">
+      </a>
+      <nav class="menu" aria-label="Primary">
+        <a href="../../#about">About</a>
+        <a href="../../#collection">Collection</a>
+        <a href="../../#maturation">Process</a>
+        <a href="../../#mv">Mission & Vision</a>
+        <a href="../">Journal</a>
+        <a href="../../#sensory">Sensory Journey</a>
+        <a href="../../#footer">Contact</a>
+        <a href="../../#shop" class="btn pill">Shop</a>
+      </nav>
+      <button class="hamburger" aria-expanded="false" aria-controls="drawer" onclick="toggleDrawer()">Menu ▾</button>
+    </div>
+    <div id="drawer" class="mobile-drawer container" role="dialog" aria-modal="true" aria-label="Mobile menu">
       <a href="../../#about" onclick="toggleDrawer(false)">About</a>
       <a href="../../#collection" onclick="toggleDrawer(false)">Collection</a>
-      <a href="../../#process" onclick="toggleDrawer(false)">Process</a>
-      <a href="../../#mission" onclick="toggleDrawer(false)">Mission & Vision</a>
+      <a href="../../#maturation" onclick="toggleDrawer(false)">Process</a>
+      <a href="../../#mv" onclick="toggleDrawer(false)">Mission & Vision</a>
       <a href="../" onclick="toggleDrawer(false)">Journal</a>
       <a href="../../#sensory" onclick="toggleDrawer(false)">Sensory Journey</a>
-      <a href="../../#contact" onclick="toggleDrawer(false)">Contact</a>
+      <a href="../../#footer" onclick="toggleDrawer(false)">Contact</a>
       <a href="../../#shop" onclick="toggleDrawer(false)">Shop</a>
     </div>
   </header>
@@ -300,40 +318,30 @@ function generateArticleHTML(article) {
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-brand">
-          <img src="../../images/stacked_logo.svg" alt="Ó Caviar" class="footer-logo">
-          <p>Ireland's first caviar house, dedicated to maturing the world's finest caviar to its peak expression.</p>
-        </div>
-        
-        <div class="footer-links">
-          <div class="footer-column">
-            <h4>Discover</h4>
-            <a href="../../#about">About</a>
-            <a href="../../#process">Process</a>
-            <a href="../">Journal</a>
-          </div>
-          
-          <div class="footer-column">
-            <h4>Collection</h4>
-            <a href="../../#collection">Our Caviar</a>
-            <a href="../../#sensory">Sensory Journey</a>
-            <a href="../../#shop">Shop</a>
-          </div>
-          
-          <div class="footer-column">
-            <h4>Connect</h4>
-            <a href="../../#contact">Contact</a>
-            <a href="../../#mission">Mission</a>
-          </div>
+  <footer id="footer" class="site-footer">
+    <div class="container footgrid">
+      <div>
+        <div class="brand">
+          <img src="../../images/stacked_logo.svg" class="logo logo--stacked" alt="Ó Caviar — Stacked" role="img">
         </div>
       </div>
-      
-      <div class="footer-bottom">
-        <p>&copy; 2025 Ó Caviar. All rights reserved.</p>
+      <div>
+        <div class="kicker">Explore</div>
+        <a href="../../#about">About</a><br/>
+        <a href="../../#collection">Collection</a><br/>
+        <a href="../../#maturation">Process</a><br/>
+        <a href="../">Journal</a>
       </div>
+      <div>
+        <div class="kicker">Contact</div>
+        <a href="mailto:hello@ocaviar.com">hello@ocaviar.com</a><br/>
+        <span class="muted">Wicklow, Ireland</span>
+      </div>
+    </div>
+    
+    <!-- Copyright centered below footer grid -->
+    <div class="copyright-container">
+      <p class="copy copyright-text">© <span id="year"></span> Ó Caviar. <span class="copyright-break">All rights reserved.</span> Elevating the legacy of sturgeon.</p>
     </div>
   </footer>
 
@@ -351,70 +359,96 @@ function convertMarkdownToHTML(markdown) {
         .replace(/$/g, '</p>');
 }
 
-async function updateArticlesJSON(newArticles) {
+async function updateArticlesJSON(newArticles, processedSlugs) {
     const articlesPath = path.join(__dirname, 'journal', 'articles.json');
-    const articlesDir = path.join(__dirname, 'journal', '_articles');
+    const journalDir = path.join(__dirname, 'journal');
     
     try {
-        // Get list of current markdown files to sync with articles.json
-        const files = await fs.readdir(articlesDir);
-        const currentMdFiles = files.filter(file => file.endsWith('.md'));
-        const currentSlugs = currentMdFiles.map(file => {
-            // Extract slug from filename (remove date prefix and .md extension)
-            return file.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace('.md', '');
-        });
-        
         // Read existing articles
         let existingArticles = [];
         try {
             const existingData = await fs.readFile(articlesPath, 'utf8');
             existingArticles = JSON.parse(existingData);
+            if (!Array.isArray(existingArticles)) {
+                console.warn('⚠️  articles.json is not an array, resetting');
+                existingArticles = [];
+            }
         } catch (error) {
-            console.log('Creating new articles.json');
+            console.log('📝 Creating new articles.json');
+            existingArticles = [];
         }
         
         // Filter out articles that no longer have markdown files (deleted articles)
-        const validExistingArticles = existingArticles.filter(article => 
-            currentSlugs.includes(article.slug)
+        const validArticles = existingArticles.filter(article => 
+            processedSlugs.has(article.slug)
         );
         
-        // Merge articles (avoid duplicates)
-        const allArticles = [...validExistingArticles];
-        
-        for (const newArticle of newArticles) {
-            const existingIndex = allArticles.findIndex(a => a.slug === newArticle.slug);
-            if (existingIndex >= 0) {
-                allArticles[existingIndex] = newArticle;
-            } else {
-                allArticles.push(newArticle);
-            }
+        // Log deleted articles
+        const deletedCount = existingArticles.length - validArticles.length;
+        if (deletedCount > 0) {
+            const deletedArticles = existingArticles
+                .filter(a => !processedSlugs.has(a.slug))
+                .map(a => a.title);
+            console.log(`🗑️  Removed ${deletedCount} deleted article(s):`);
+            deletedArticles.forEach(title => console.log(`   - ${title}`));
         }
         
-        // Clean up article directories that no longer have markdown files
-        const articleDirs = await fs.readdir(path.join(__dirname, 'journal'));
-        for (const dir of articleDirs) {
-            const dirPath = path.join(__dirname, 'journal', dir);
-            const stats = await fs.stat(dirPath).catch(() => null);
-            if (stats && stats.isDirectory() && 
-                !['_articles'].includes(dir) &&
-                !currentSlugs.includes(dir)) {
-                console.log(`🗑️ Removing orphaned article directory: ${dir}`);
-                await fs.rmdir(dirPath, { recursive: true }).catch(console.error);
+        // Merge with new articles (replace existing ones with same slug)
+        const mergedArticles = [...validArticles];
+        
+        for (const newArticle of newArticles) {
+            const existingIndex = mergedArticles.findIndex(a => a.slug === newArticle.slug);
+            if (existingIndex >= 0) {
+                console.log(`🔄 Updating: ${newArticle.title}`);
+                mergedArticles[existingIndex] = newArticle;
+            } else {
+                console.log(`✨ New article: ${newArticle.title}`);
+                mergedArticles.push(newArticle);
             }
         }
         
         // Sort by date (most recent first)
-        allArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+        mergedArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
         
         // Write updated articles.json
-        await fs.writeFile(articlesPath, JSON.stringify(allArticles, null, 2));
+        await fs.writeFile(articlesPath, JSON.stringify(mergedArticles, null, 2));
+        console.log(`\n✅ articles.json updated with ${mergedArticles.length} total articles`);
         
-        console.log(`📄 Updated articles.json with ${allArticles.length} total articles`);
-        console.log(`🧹 Synchronized with ${currentMdFiles.length} markdown files`);
+        // Clean up orphaned article directories
+        await cleanupOrphanedDirectories(journalDir, processedSlugs);
         
     } catch (error) {
         console.error('❌ Error updating articles.json:', error);
         throw error;
+    }
+}
+
+async function cleanupOrphanedDirectories(journalDir, processedSlugs) {
+    try {
+        const entries = await fs.readdir(journalDir, { withFileTypes: true });
+        let cleanupCount = 0;
+        
+        for (const entry of entries) {
+            // Skip non-directories and special directories
+            if (!entry.isDirectory() || entry.name === '_articles') {
+                continue;
+            }
+            
+            // If directory slug is not in processed slugs, it's orphaned
+            if (!processedSlugs.has(entry.name)) {
+                const dirPath = path.join(journalDir, entry.name);
+                console.log(`🗑️  Removing orphaned directory: ${entry.name}`);
+                await fs.rm(dirPath, { recursive: true, force: true });
+                cleanupCount++;
+            }
+        }
+        
+        if (cleanupCount > 0) {
+            console.log(`🧹 Cleaned up ${cleanupCount} orphaned article directory(ies)`);
+        }
+    } catch (error) {
+        console.warn('⚠️  Error cleaning up orphaned directories:', error.message);
+        // Don't throw - this is not critical
     }
 }
 
