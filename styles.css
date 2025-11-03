@@ -620,6 +620,16 @@ h4 {
   margin-bottom: 28px;
 }
 
+.sensory a,
+.sensory-card a,
+.sensory .list a {
+  color: var(--emerald);
+}
+
+.sensory-list span {
+  color: var(--emerald);
+}
+
 /* Camada de textura */
 .sensory-bg{
   position: absolute;
