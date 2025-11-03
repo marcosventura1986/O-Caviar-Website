@@ -353,6 +353,7 @@ function generateArticleHTML(article) {
   </footer>
 
   <script src="../../scripts.js"></script>
+  <script src="../../cookie-consent.js"></script>
 </body>
 </html>`;
 }
