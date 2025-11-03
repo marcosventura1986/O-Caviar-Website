@@ -977,5 +977,95 @@ h4 {
   .timeline-line .progress{ transition:none!important; }
 }
 
+/* === JOURNAL CTA SECTION === */
+.journal-cta-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 60px 0 20px;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn-see-all {
+  font-size: 16px;
+  font-weight: 500;
+  padding: 14px 32px;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(200, 169, 106, 0.15), rgba(185, 122, 60, 0.08));
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-see-all::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(200, 169, 106, 0.2), transparent);
+  transition: left 0.6s ease;
+  z-index: 0;
+}
+
+.btn-see-all span {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-see-all .arrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-see-all:hover {
+  color: var(--ink);
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(200, 169, 106, 0.25), rgba(185, 122, 60, 0.15));
+  box-shadow: 0 8px 32px rgba(200, 169, 106, 0.2), inset 0 0 20px rgba(200, 169, 106, 0.1);
+  transform: translateY(-2px);
+}
+
+.btn-see-all:hover::before {
+  left: 100%;
+}
+
+.btn-see-all:hover .arrow {
+  transform: translateX(4px);
+}
+
+.btn-see-all:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 16px rgba(200, 169, 106, 0.15);
+}
+
+@media (max-width: 768px) {
+  .journal-cta-section {
+    margin: 40px 0 10px;
+  }
+
+  .btn-see-all {
+    font-size: 15px;
+    padding: 12px 28px;
+  }
+}
+
 
 
