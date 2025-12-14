@@ -1,0 +1,8 @@
+# robots.txt for Ó Caviar
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /netlify/
+
+# Sitemap location
+Sitemap: https://ocaviar.ie/sitemap.xml
