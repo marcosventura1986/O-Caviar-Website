@@ -105,6 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
       ],
       radar: [0.8, 0.8, 0.6]
     },
+    "Oscietra Large": {
+      texture: "Larger, silky pearls with a more luxurious pop",
+      taste: "Nutty, buttery depth with refined minerality with larger pearls that create a more luxurious sensation in the mouth",
+      aroma: "Clean, refined, faint sea-breeze",
+      pairings: [
+        "Champagne Blanc de Blancs (Brut) — Freshness lifts nutty/buttery notes.",
+        "Chablis / Sancerre — Precise acidity highlights minerality.",
+        "Premium Vodka — Neutral, palate-cleansing between bites.",
+        "Blinis & Crème Fraîche — Supports texture and creaminess."
+      ],
+      radar: [0.8, 0.8, 0.6]
+    },
     "Schrenkii": {
       texture: "Medium-large pearls, smooth pop, silky finish",
       taste: "Roasted almond, creamy richness, subtle spice",
@@ -352,6 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const href = a.getAttribute('href');
         // ignore empty or just '#'
         if (!href || href === '#') return;
+        // skip if it's an external link (has http/https)
+        if (href.includes('http')) return;
         const target = document.querySelector(href);
         if (target){
           e.preventDefault();
@@ -430,6 +444,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let isDragging = false;
 
   track.addEventListener('pointerdown', (e) => {
+    // Não interceptar cliques em links
+    if (e.target.closest('a')) return;
     isDragging = true;
     startX = e.clientX;
     startScrollLeft = track.scrollLeft;
